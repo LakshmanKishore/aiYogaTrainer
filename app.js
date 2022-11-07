@@ -29,12 +29,8 @@ function onResults(results) {
   // console.log(results.poseLandmarks);
   drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS,
     { color: '#00FF00', lineWidth: 1 });
-  
-    // drawLandmarks(canvasCtx, results.poseLandmarks,
-  //   { color: '#0000FF', lineWidth: 15 });
 
-  drawLandmarks(canvasCtx, results.poseLandmarks,
-    { color: '#FF0000', lineWidth: 2 });
+  drawLandmarks(canvasCtx, results.poseLandmarks, { fillColor: '#00000002', lineWidth: 2, radius: 15, color: "#FF5F29" });
   canvasCtx.restore();
 
   grid.updateLandmarks(results.poseWorldLandmarks);
@@ -45,6 +41,7 @@ const pose = new Pose({
     return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`;
   }
 });
+
 pose.setOptions({
   modelComplexity: 1,
   smoothLandmarks: true,
