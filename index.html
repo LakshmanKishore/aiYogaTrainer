@@ -15,10 +15,14 @@
 
 <body>
   <div class="container">
-    <h1>AI Yoga Trainer</h1>
-    <video class="input_video"></video>
+    <h1 align="center">AI Yoga Trainer</h1>
+    <video class="input_video" hidden></video>
     <canvas class="output_canvas" width="500px" height="400px"></canvas>
-    <div class="landmark-grid-container"></div>
+    <div class="landmark-grid-container" hidden></div>
+
+    <div>Left Elbow Angle: <span class="angleLeftElbow"></span></div>
+    <div>Right Elbow Angle: <span class="angleRightElbow"></span></div>
+
   </div>
   <script src="app.js"></script>
 </body>
