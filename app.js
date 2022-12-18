@@ -11,6 +11,8 @@ const angleRightHip = document.querySelector(".angleRightHip");
 const angleLeftKnee = document.querySelector(".angleLeftKnee");
 const angleRightKnee = document.querySelector(".angleRightKnee");
 const grid = new LandmarkGrid(landmarkContainer);
+const loader = document.querySelector(".loader");
+let CameraCaptureStarted=false;
 const w = canvasElement.width, h = canvasElement.height;
 
 function find_angle(A,B,C) {
@@ -21,6 +23,10 @@ function find_angle(A,B,C) {
 }
 
 function onResults(results) {
+  if(!CameraCaptureStarted){
+    loader.style.display="none";
+    CameraCaptureStarted=true;
+  }
   if (!results.poseLandmarks) {
     grid.updateLandmarks([]);
     return;
