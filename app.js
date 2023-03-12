@@ -52,10 +52,16 @@ function onResults(results) {
 
   canvasCtx.globalCompositeOperation = 'source-over';
   // console.log(results.poseLandmarks);
-  drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS,
-    { color: '#00FF00', lineWidth: 1 });
+  drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS,{ color: 'red', lineWidth: 3 });
+  
+  const faceLandmarks=[lm[0],lm[2],lm[5],lm[7],lm[8],lm[9],lm[10]];
+  const bodyLandmarks = [lm[11],lm[12],lm[13],lm[14],lm[23],lm[24]];
+  const wristFootLandmarks = [lm[15],lm[16],lm[17],lm[18],lm[19],lm[20],lm[21],lm[22]];
 
-  drawLandmarks(canvasCtx, results.poseLandmarks, { fillColor: '#00000002', lineWidth: 2, radius: 15, color: "#FF5F29" });
+  drawLandmarks(canvasCtx, faceLandmarks, { fillColor: '#00000002', lineWidth: 2, radius: 5, color: "blue"  });
+  drawLandmarks(canvasCtx, bodyLandmarks, { fillColor: '#00000002', lineWidth: 2, radius: 15, color: "blue"  });
+  drawLandmarks(canvasCtx, wristFootLandmarks, { fillColor: '#00000002', lineWidth: 2, radius: 3, color: "blue"  });
+  
   canvasCtx.restore();
 
   grid.updateLandmarks(results.poseWorldLandmarks);
@@ -66,6 +72,7 @@ const pose = new Pose({
     return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`;
   }
 });
+
 
 pose.setOptions({
   modelComplexity: 1,
