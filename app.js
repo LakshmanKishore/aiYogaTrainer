@@ -12,7 +12,20 @@ const angleLeftKnee = document.querySelector(".angleLeftKnee");
 const angleRightKnee = document.querySelector(".angleRightKnee");
 const grid = new LandmarkGrid(landmarkContainer);
 const loader = document.querySelector(".loader");
+
+const poseImage = document.querySelector(".pose-image");
+// image popup
+const viewPose = document.querySelector(".view-pose");
+
+// Get the modal
+const modal = document.getElementById("myModal");
+
+// Get the <span> element that closes the modal
+const span = document.getElementsByClassName("close")[0];
+
+
 let CameraCaptureStarted=false;
+
 const w = canvasElement.width, h = canvasElement.height;
 
 function find_angle(A,B,C) {
@@ -41,7 +54,7 @@ function onResults(results) {
         l_knee = {x:lm[25].x,y:lm[25].y},
         l_ankle = {x:lm[27].x,y:lm[27].y};
         
-        const r_shldr = {x:lm[12].x,y:lm[12].y},
+  const r_shldr = {x:lm[12].x,y:lm[12].y},
         r_elbow = {x:lm[14].x,y:lm[14].y},
         r_wrist = {x:lm[16].x,y:lm[16].y},
         r_hip = {x:lm[24].x,y:lm[24].y},
@@ -82,7 +95,7 @@ function onResults(results) {
   const wristFootLandmarks = [lm[15],lm[16],lm[17],lm[18],lm[19],lm[20],lm[21],lm[22]];
 
   drawLandmarks(canvasCtx, faceLandmarks, { fillColor: '#00000002', lineWidth: 2, radius: 5, color: "blue"  });
-  drawLandmarks(canvasCtx, bodyLandmarks, { fillColor: '#00000002', lineWidth: 2, radius: 15, color: "blue"  });
+  drawLandmarks(canvasCtx, bodyLandmarks, { fillColor: '#00000002', lineWidth: 2, radius: 10, color: "blue"  });
   drawLandmarks(canvasCtx, wristFootLandmarks, { fillColor: '#00000002', lineWidth: 2, radius: 3, color: "blue"  });
   
   canvasCtx.restore();
@@ -115,3 +128,22 @@ const camera = new Camera(videoElement, {
   height: 400
 });
 camera.start();
+
+poseImage.setAttribute("src", "images/tree-yoga-pose-vrksasana.jpg");
+
+// When the user clicks on the button, open the modal
+viewPose.onclick = function() {
+  modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
