@@ -4,8 +4,15 @@ const canvasCtx = canvasElement.getContext('2d');
 const landmarkContainer = document.getElementsByClassName('landmark-grid-container')[0];
 const angleLeftElbow = document.querySelector(".angleLeftElbow");
 const angleRightElbow = document.querySelector(".angleRightElbow");
+const angleLeftShoulder = document.querySelector(".angleLeftShoulder");
+const angleRightShoulder = document.querySelector(".angleRightShoulder");
+const angleLeftHip = document.querySelector(".angleLeftHip");
+const angleRightHip = document.querySelector(".angleRightHip");
+const angleLeftKnee = document.querySelector(".angleLeftKnee");
+const angleRightKnee = document.querySelector(".angleRightKnee");
 const grid = new LandmarkGrid(landmarkContainer);
-var i = 10;
+const loader = document.querySelector(".loader");
+let CameraCaptureStarted=false;
 const w = canvasElement.width, h = canvasElement.height;
 
 function find_angle(A,B,C) {
@@ -16,6 +23,10 @@ function find_angle(A,B,C) {
 }
 
 function onResults(results) {
+  if(!CameraCaptureStarted){
+    loader.style.display="none";
+    CameraCaptureStarted=true;
+  }
   if (!results.poseLandmarks) {
     grid.updateLandmarks([]);
     return;
@@ -25,17 +36,29 @@ function onResults(results) {
   const lm = results.poseLandmarks;
   const l_shldr = {x:lm[11].x,y:lm[11].y},
         l_elbow = {x:lm[13].x,y:lm[13].y},
-        l_wrist = {x:lm[15].x,y:lm[15].y};
-
-  const r_shldr = {x:lm[12].x,y:lm[12].y},
+        l_wrist = {x:lm[15].x,y:lm[15].y},
+        l_hip = {x:lm[23].x,y:lm[23].y},
+        l_knee = {x:lm[25].x,y:lm[25].y},
+        l_ankle = {x:lm[27].x,y:lm[27].y};
+        
+        const r_shldr = {x:lm[12].x,y:lm[12].y},
         r_elbow = {x:lm[14].x,y:lm[14].y},
-        r_wrist = {x:lm[16].x,y:lm[16].y};
-
+        r_wrist = {x:lm[16].x,y:lm[16].y},
+        r_hip = {x:lm[24].x,y:lm[24].y},
+        r_knee = {x:lm[26].x,y:lm[26].y},
+        r_ankle = {x:lm[28].x,y:lm[28].y};
+        
   angleLeftElbow.innerHTML = find_angle(l_shldr,l_elbow,l_wrist).toFixed(2);
   angleRightElbow.innerHTML = find_angle(r_shldr,r_elbow,r_wrist).toFixed(2);
-  // if(i>=0){
-  //   i-=1;
-  // }
+
+  angleLeftShoulder.innerHTML = find_angle(l_elbow,l_shldr,l_hip).toFixed(2);
+  angleRightShoulder.innerHTML = find_angle(r_elbow,r_shldr,r_hip).toFixed(2);
+
+  angleLeftHip.innerHTML = find_angle(l_shldr,l_hip,l_knee).toFixed(2);
+  angleRightHip.innerHTML = find_angle(r_shldr,r_hip,r_knee).toFixed(2);
+  
+  angleLeftKnee.innerHTML = find_angle(l_hip,l_knee,l_ankle).toFixed(2);
+  angleRightKnee.innerHTML = find_angle(r_hip,r_knee,r_ankle).toFixed(2);
 
   canvasCtx.save();
   canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);

@@ -10,11 +10,13 @@
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script>
   <!-- CSS only -->
+  <link rel="stylesheet" href="app.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
 </head>
 
 <body>
   <div class="container">
+    <div class="loader"></div>
     <h1 align="center">AI Yoga Trainer</h1>
     <video class="input_video" hidden></video>
     <canvas class="output_canvas" width="500px" height="400px"></canvas>
@@ -22,6 +24,15 @@
 
     <div>Left Elbow Angle: <span class="angleLeftElbow"></span></div>
     <div>Right Elbow Angle: <span class="angleRightElbow"></span></div>
+
+    <div>Left Shoulder Angle: <span class="angleLeftShoulder"></span></div>
+    <div>Right Shoulder Angle: <span class="angleRightShoulder"></span></div>
+    
+    <div>Left Hip Angle: <span class="angleLeftHip"></span></div>
+    <div>Right Hip Angle: <span class="angleRightHip"></span></div>
+    
+    <div>Left Knee Angle: <span class="angleLeftKnee"></span></div>
+    <div>Right Knee Angle: <span class="angleRightKnee"></span></div>
 
   </div>
   <script src="app.js"></script>
