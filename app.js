@@ -12,20 +12,32 @@ const angleLeftKnee = document.querySelector(".angleLeftKnee");
 const angleRightKnee = document.querySelector(".angleRightKnee");
 const grid = new LandmarkGrid(landmarkContainer);
 const loader = document.querySelector(".loader");
-let CameraCaptureStarted=false;
+let CameraCaptureStarted = false;
 const w = canvasElement.width, h = canvasElement.height;
+let leftShoulderColor, rightShoulderColor;
+let leftElbowColor, rightElbowColor;
+let leftHipColor, rightHipColor;
+let leftKneeColor, rightKneeColor;
+let colorsArray = [];
+let start = false;
+let countdown = 5;
+var timerArray=[];
 
-function find_angle(A,B,C) {
-  let AB = Math.sqrt(Math.pow(B.x-A.x,2)+ Math.pow(B.y-A.y,2));    
-  let BC = Math.sqrt(Math.pow(B.x-C.x,2)+ Math.pow(B.y-C.y,2)); 
-  let AC = Math.sqrt(Math.pow(C.x-A.x,2)+ Math.pow(C.y-A.y,2));
-  return (Math.acos((BC*BC+AB*AB-AC*AC)/(2*BC*AB))*180)/Math.PI;
+function find_angle(A, B, C) {
+  let AB = Math.sqrt(Math.pow(B.x - A.x, 2) + Math.pow(B.y - A.y, 2));
+  let BC = Math.sqrt(Math.pow(B.x - C.x, 2) + Math.pow(B.y - C.y, 2));
+  let AC = Math.sqrt(Math.pow(C.x - A.x, 2) + Math.pow(C.y - A.y, 2));
+  return (Math.acos((BC * BC + AB * AB - AC * AC) / (2 * BC * AB)) * 180) / Math.PI;
+}
+
+function angleComparision(lowerRange, upperRange, htmlElement) {
+  return htmlElement > lowerRange && htmlElement < upperRange ? "green" : "red";;
 }
 
 function onResults(results) {
-  if(!CameraCaptureStarted){
-    loader.style.display="none";
-    CameraCaptureStarted=true;
+  if (!CameraCaptureStarted) {
+    loader.style.display = "none";
+    CameraCaptureStarted = true;
   }
   if (!results.poseLandmarks) {
     grid.updateLandmarks([]);
@@ -34,31 +46,84 @@ function onResults(results) {
 
   // console.log("updating", results)
   const lm = results.poseLandmarks;
-  const l_shldr = {x:lm[11].x,y:lm[11].y},
-        l_elbow = {x:lm[13].x,y:lm[13].y},
-        l_wrist = {x:lm[15].x,y:lm[15].y},
-        l_hip = {x:lm[23].x,y:lm[23].y},
-        l_knee = {x:lm[25].x,y:lm[25].y},
-        l_ankle = {x:lm[27].x,y:lm[27].y};
-        
-        const r_shldr = {x:lm[12].x,y:lm[12].y},
-        r_elbow = {x:lm[14].x,y:lm[14].y},
-        r_wrist = {x:lm[16].x,y:lm[16].y},
-        r_hip = {x:lm[24].x,y:lm[24].y},
-        r_knee = {x:lm[26].x,y:lm[26].y},
-        r_ankle = {x:lm[28].x,y:lm[28].y};
-        
-  angleLeftElbow.innerHTML = find_angle(l_shldr,l_elbow,l_wrist).toFixed(2);
-  angleRightElbow.innerHTML = find_angle(r_shldr,r_elbow,r_wrist).toFixed(2);
+  const l_shldr = { x: lm[11].x, y: lm[11].y },
+    l_elbow = { x: lm[13].x, y: lm[13].y },
+    l_wrist = { x: lm[15].x, y: lm[15].y },
+    l_hip = { x: lm[23].x, y: lm[23].y },
+    l_knee = { x: lm[25].x, y: lm[25].y },
+    l_ankle = { x: lm[27].x, y: lm[27].y };
 
-  angleLeftShoulder.innerHTML = find_angle(l_elbow,l_shldr,l_hip).toFixed(2);
-  angleRightShoulder.innerHTML = find_angle(r_elbow,r_shldr,r_hip).toFixed(2);
+  const r_shldr = { x: lm[12].x, y: lm[12].y },
+    r_elbow = { x: lm[14].x, y: lm[14].y },
+    r_wrist = { x: lm[16].x, y: lm[16].y },
+    r_hip = { x: lm[24].x, y: lm[24].y },
+    r_knee = { x: lm[26].x, y: lm[26].y },
+    r_ankle = { x: lm[28].x, y: lm[28].y };
 
-  angleLeftHip.innerHTML = find_angle(l_shldr,l_hip,l_knee).toFixed(2);
-  angleRightHip.innerHTML = find_angle(r_shldr,r_hip,r_knee).toFixed(2);
-  
-  angleLeftKnee.innerHTML = find_angle(l_hip,l_knee,l_ankle).toFixed(2);
-  angleRightKnee.innerHTML = find_angle(r_hip,r_knee,r_ankle).toFixed(2);
+  angleLeftElbow.innerHTML = find_angle(l_shldr, l_elbow, l_wrist).toFixed(2);
+  angleRightElbow.innerHTML = find_angle(r_shldr, r_elbow, r_wrist).toFixed(2);
+
+  angleLeftShoulder.innerHTML = find_angle(l_elbow, l_shldr, l_hip).toFixed(2);
+  angleRightShoulder.innerHTML = find_angle(r_elbow, r_shldr, r_hip).toFixed(2);
+
+  angleLeftHip.innerHTML = find_angle(l_shldr, l_hip, l_knee).toFixed(2);
+  angleRightHip.innerHTML = find_angle(r_shldr, r_hip, r_knee).toFixed(2);
+
+  angleLeftKnee.innerHTML = find_angle(l_hip, l_knee, l_ankle).toFixed(2);
+  angleRightKnee.innerHTML = find_angle(r_hip, r_knee, r_ankle).toFixed(2);
+
+
+
+
+  leftShoulderColor = angleComparision(25, 40, angleLeftShoulder.innerHTML);
+  rightShoulderColor = angleComparision(25, 40, angleRightShoulder.innerHTML);
+
+  leftElbowColor = angleComparision(50, 65, angleLeftElbow.innerHTML);
+  rightElbowColor = angleComparision(50, 65, angleRightElbow.innerHTML);
+
+  leftHipColor = angleComparision(168, 180, angleLeftHip.innerHTML);
+  rightHipColor = angleComparision(110, 135, angleRightHip.innerHTML);
+
+  leftKneeColor = angleComparision(165, 185, angleLeftKnee.innerHTML);
+  rightKneeColor = angleComparision(62, 85, angleRightKnee.innerHTML);
+
+  // colorsArray.push(leftShoulderColor,rightShoulderColor,leftElbowColor,rightElbowColor,leftHipColor,rightHipColor,leftKneeColor,rightKneeColor);
+  // colorsSet=new Set(colorsArray);
+  // console.log(colorsSet)
+  // console.log(leftElbowColor);
+  if (start === false && leftShoulderColor === "green" && rightShoulderColor === "green" && leftElbowColor === "green" && rightElbowColor === "green" && leftHipColor === "green" && rightHipColor
+    === "green" && leftKneeColor === "green" && rightKneeColor === "green") {
+    start = true;
+    console.log("started");
+    var timeleft = 5;
+    var downloadTimer = setInterval(function () {
+      if (timeleft <= 0) {
+        clearInterval(downloadTimer);
+        console.log("Finished");
+      } else {
+        console.log(timeleft + " seconds remaining");
+      }
+      timeleft -= 1;
+    }, 1000);
+    timerArray.push(downloadTimer);
+    console.log(timerArray);
+  }
+
+  else if (start === true && (leftShoulderColor === "red" || rightShoulderColor === "red" || leftElbowColor === "red" || rightElbowColor === "red" || leftHipColor === "red" || rightHipColor
+    === "red" || leftKneeColor === "red" || rightKneeColor === "red")) {
+    start = false;
+    console.log("Restart");
+    // setTimeout(()=>{
+    //   clearInterval(downloadTimer);
+    // },1);
+    for(let i=0;i<timerArray.length-1;i++){
+      clearInterval(timerArray[i]);
+      // timerArray.splice(i);
+    }
+  }
+  // if(start){
+
+  // }
 
   canvasCtx.save();
   canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
@@ -75,16 +140,26 @@ function onResults(results) {
 
   canvasCtx.globalCompositeOperation = 'source-over';
   // console.log(results.poseLandmarks);
-  drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS,{ color: 'red', lineWidth: 3 });
-  
-  const faceLandmarks=[lm[0],lm[2],lm[5],lm[7],lm[8],lm[9],lm[10]];
-  const bodyLandmarks = [lm[11],lm[12],lm[13],lm[14],lm[23],lm[24]];
-  const wristFootLandmarks = [lm[15],lm[16],lm[17],lm[18],lm[19],lm[20],lm[21],lm[22]];
+  drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS, { color: 'red', lineWidth: 3 });
 
-  drawLandmarks(canvasCtx, faceLandmarks, { fillColor: '#00000002', lineWidth: 2, radius: 5, color: "blue"  });
-  drawLandmarks(canvasCtx, bodyLandmarks, { fillColor: '#00000002', lineWidth: 2, radius: 15, color: "blue"  });
-  drawLandmarks(canvasCtx, wristFootLandmarks, { fillColor: '#00000002', lineWidth: 2, radius: 3, color: "blue"  });
-  
+  const faceLandmarks = [lm[0], lm[2], lm[5], lm[7], lm[8], lm[9], lm[10]];
+  const bodyLandmarks = [lm[11], lm[12], lm[13], lm[14], lm[23], lm[24]];
+  const wristFootLandmarks = [lm[15], lm[16], lm[17], lm[18], lm[19], lm[20], lm[21], lm[22]];
+
+  // const bodyLandmarkColors=[]
+
+  drawLandmarks(canvasCtx, faceLandmarks, { fillColor: '#00000002', lineWidth: 2, radius: 5, color: "blue" });
+  drawLandmarks(canvasCtx, bodyLandmarks, { fillColor: '#00000002', lineWidth: 2, radius: 5, color: "blue" });
+  drawLandmarks(canvasCtx, wristFootLandmarks, { fillColor: '#00000002', lineWidth: 2, radius: 3, color: "blue" });
+  drawLandmarks(canvasCtx, [lm[11]], { fillColor: '#00000002', lineWidth: 8, radius: 25, color: leftShoulderColor });
+  drawLandmarks(canvasCtx, [lm[12]], { fillColor: '#00000002', lineWidth: 8, radius: 25, color: rightShoulderColor });
+  drawLandmarks(canvasCtx, [lm[13]], { fillColor: '#00000002', lineWidth: 8, radius: 25, color: leftElbowColor });
+  drawLandmarks(canvasCtx, [lm[14]], { fillColor: '#00000002', lineWidth: 8, radius: 25, color: rightElbowColor });
+  drawLandmarks(canvasCtx, [lm[23]], { fillColor: '#00000002', lineWidth: 8, radius: 25, color: leftHipColor });
+  drawLandmarks(canvasCtx, [lm[24]], { fillColor: '#00000002', lineWidth: 8, radius: 25, color: rightHipColor });
+  drawLandmarks(canvasCtx, [lm[25]], { fillColor: '#00000002', lineWidth: 8, radius: 25, color: leftKneeColor });
+  drawLandmarks(canvasCtx, [lm[26]], { fillColor: '#00000002', lineWidth: 8, radius: 25, color: rightKneeColor });
+
   canvasCtx.restore();
 
   grid.updateLandmarks(results.poseWorldLandmarks);
