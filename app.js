@@ -36,6 +36,14 @@ let start = false;
 let countdown = 5;
 var timerArray=[];
 
+canvasElement.width = window.innerWidth;
+canvasElement.height = window.innerHeight;
+
+window.addEventListener('resize', () => {
+  canvasElement.width = window.innerWidth;
+  canvasElement.height = window.innerHeight;
+});
+
 function find_angle(A, B, C) {
   let AB = Math.sqrt(Math.pow(B.x - A.x, 2) + Math.pow(B.y - A.y, 2));
   let BC = Math.sqrt(Math.pow(B.x - C.x, 2) + Math.pow(B.y - C.y, 2));
@@ -164,14 +172,14 @@ function onResults(results) {
   drawLandmarks(canvasCtx, faceLandmarks, { fillColor: '#00000002', lineWidth: 2, radius: 5, color: "blue" });
   drawLandmarks(canvasCtx, bodyLandmarks, { fillColor: '#00000002', lineWidth: 2, radius: 5, color: "blue" });
   drawLandmarks(canvasCtx, wristFootLandmarks, { fillColor: '#00000002', lineWidth: 2, radius: 3, color: "blue" });
-  drawLandmarks(canvasCtx, [lm[11]], { fillColor: '#00000002', lineWidth: 8, radius: 25, color: leftShoulderColor });
-  drawLandmarks(canvasCtx, [lm[12]], { fillColor: '#00000002', lineWidth: 8, radius: 25, color: rightShoulderColor });
-  drawLandmarks(canvasCtx, [lm[13]], { fillColor: '#00000002', lineWidth: 8, radius: 25, color: leftElbowColor });
-  drawLandmarks(canvasCtx, [lm[14]], { fillColor: '#00000002', lineWidth: 8, radius: 25, color: rightElbowColor });
-  drawLandmarks(canvasCtx, [lm[23]], { fillColor: '#00000002', lineWidth: 8, radius: 25, color: leftHipColor });
-  drawLandmarks(canvasCtx, [lm[24]], { fillColor: '#00000002', lineWidth: 8, radius: 25, color: rightHipColor });
-  drawLandmarks(canvasCtx, [lm[25]], { fillColor: '#00000002', lineWidth: 8, radius: 25, color: leftKneeColor });
-  drawLandmarks(canvasCtx, [lm[26]], { fillColor: '#00000002', lineWidth: 8, radius: 25, color: rightKneeColor });
+  drawLandmarks(canvasCtx, [lm[11]], { fillColor: '#00000002', lineWidth: 5, radius: 20, color: leftShoulderColor });
+  drawLandmarks(canvasCtx, [lm[12]], { fillColor: '#00000002', lineWidth: 5, radius: 20, color: rightShoulderColor });
+  drawLandmarks(canvasCtx, [lm[13]], { fillColor: '#00000002', lineWidth: 5, radius: 20, color: leftElbowColor });
+  drawLandmarks(canvasCtx, [lm[14]], { fillColor: '#00000002', lineWidth: 5, radius: 20, color: rightElbowColor });
+  drawLandmarks(canvasCtx, [lm[23]], { fillColor: '#00000002', lineWidth: 5, radius: 20, color: leftHipColor });
+  drawLandmarks(canvasCtx, [lm[24]], { fillColor: '#00000002', lineWidth: 5, radius: 20, color: rightHipColor });
+  drawLandmarks(canvasCtx, [lm[25]], { fillColor: '#00000002', lineWidth: 5, radius: 20, color: leftKneeColor });
+  drawLandmarks(canvasCtx, [lm[26]], { fillColor: '#00000002', lineWidth: 5, radius: 20, color: rightKneeColor });
 
   canvasCtx.restore();
 
@@ -198,9 +206,7 @@ pose.onResults(onResults);
 const camera = new Camera(videoElement, {
   onFrame: async () => {
     await pose.send({ image: videoElement });
-  },
-  width: 500,
-  height: 400
+  }
 });
 camera.start();
 
@@ -222,3 +228,26 @@ window.onclick = function(event) {
     modal.style.display = "none";
   }
 }
+
+function stopWebCamCapture(){
+  const video = document.querySelector('video');
+  
+  // A video's MediaStream object is available through its srcObject attribute
+  const mediaStream = video.srcObject;
+  
+  // Through the MediaStream, you can get the MediaStreamTracks with getTracks():
+  const tracks = mediaStream.getTracks();
+
+  // Tracks are returned as an array, so if you know you only have one, you can stop it with: 
+  tracks[0].stop();
+  
+  // Or stop all like so:
+  tracks.forEach(track => track.stop())  
+}
+
+window.addEventListener("keydown", function(event) {
+    if (event.key === 'q') {
+      console.log("Stopping Web Cam Capture")
+      stopWebCamCapture();
+    }
+});
