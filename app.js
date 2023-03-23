@@ -31,10 +31,14 @@ let leftShoulderColor, rightShoulderColor;
 let leftElbowColor, rightElbowColor;
 let leftHipColor, rightHipColor;
 let leftKneeColor, rightKneeColor;
-let colorsArray = [];
-let start = false;
-let countdown = 5;
-var timerArray=[];
+let colorsArray = [],
+    start = false,
+    startTimeStamp, 
+    currentTimeStamp = 0,
+    secondsHold,
+    countdown = 5,
+    textXPosition,
+    textYPosition;
 
 canvasElement.width = window.innerWidth;
 canvasElement.height = window.innerHeight;
@@ -53,6 +57,24 @@ function find_angle(A, B, C) {
 
 function angleComparision(lowerRange, upperRange, htmlElement) {
   return htmlElement > lowerRange && htmlElement < upperRange ? "green" : "red";;
+}
+
+function drawNumberBox(ctx, number, x, y, width, height, fontName) {
+  // Draw the white background rectangle
+  ctx.fillStyle = 'blue';
+  ctx.fillRect(x, y, width, height);
+
+  // Set the font and text alignment
+  ctx.font = `100px ${fontName}`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'white';
+
+  // Draw the number centered inside the box
+  textXPosition = x + (width / 2);
+  textYPosition = y + (height / 2);
+
+  ctx.fillText(number, textXPosition, textYPosition);
 }
 
 function onResults(results) {
@@ -96,8 +118,8 @@ function onResults(results) {
 
 
 
-  leftShoulderColor = angleComparision(25, 40, angleLeftShoulder.innerHTML);
-  rightShoulderColor = angleComparision(25, 40, angleRightShoulder.innerHTML);
+  leftShoulderColor = angleComparision(0, 70, angleLeftShoulder.innerHTML);
+  rightShoulderColor = angleComparision(0, 70, angleRightShoulder.innerHTML);
 
   leftElbowColor = angleComparision(50, 65, angleLeftElbow.innerHTML);
   rightElbowColor = angleComparision(50, 65, angleRightElbow.innerHTML);
@@ -112,39 +134,7 @@ function onResults(results) {
   // colorsSet=new Set(colorsArray);
   // console.log(colorsSet)
   // console.log(leftElbowColor);
-  if (start === false && leftShoulderColor === "green" && rightShoulderColor === "green" && leftElbowColor === "green" && rightElbowColor === "green" && leftHipColor === "green" && rightHipColor
-    === "green" && leftKneeColor === "green" && rightKneeColor === "green") {
-    start = true;
-    console.log("started");
-    var timeleft = 5;
-    var downloadTimer = setInterval(function () {
-      if (timeleft <= 0) {
-        clearInterval(downloadTimer);
-        console.log("Finished");
-      } else {
-        console.log(timeleft + " seconds remaining");
-      }
-      timeleft -= 1;
-    }, 1000);
-    timerArray.push(downloadTimer);
-    console.log(timerArray);
-  }
 
-  else if (start === true && (leftShoulderColor === "red" || rightShoulderColor === "red" || leftElbowColor === "red" || rightElbowColor === "red" || leftHipColor === "red" || rightHipColor
-    === "red" || leftKneeColor === "red" || rightKneeColor === "red")) {
-    start = false;
-    console.log("Restart");
-    // setTimeout(()=>{
-    //   clearInterval(downloadTimer);
-    // },1);
-    for(let i=0;i<timerArray.length-1;i++){
-      clearInterval(timerArray[i]);
-      // timerArray.splice(i);
-    }
-  }
-  // if(start){
-
-  // }
 
   canvasCtx.save();
   canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
@@ -181,6 +171,37 @@ function onResults(results) {
   drawLandmarks(canvasCtx, [lm[25]], { fillColor: '#00000002', lineWidth: 5, radius: 20, color: leftKneeColor });
   drawLandmarks(canvasCtx, [lm[26]], { fillColor: '#00000002', lineWidth: 5, radius: 20, color: rightKneeColor });
 
+  drawNumberBox(canvasCtx, 0, canvasElement.width - 200, canvasElement.height - 200, 200, 200, "sans-serif");
+
+
+  if (leftShoulderColor === "green" && rightShoulderColor === "green" && leftElbowColor === "green" && rightElbowColor === "green" && leftHipColor === "green" && rightHipColor === "green" && leftKneeColor === "green" && rightKneeColor === "green") {
+    if (start == false) {
+      startTimeStamp = new Date();
+      start = true;
+      console.log("started");
+    } else {
+      currentTimeStamp = new Date() - startTimeStamp;
+      secondsHold = Math.round(currentTimeStamp/1000);
+      canvasCtx.globalCompositeOperation = 'source-over';
+      drawNumberBox(canvasCtx, secondsHold, canvasElement.width - 200, canvasElement.height - 200, 200, 200, "sans-serif");
+
+      if (currentTimeStamp >= 5000) {
+        console.log("Move to next Asana");
+        start = false;
+        let msg = new SpeechSynthesisUtterance();
+        msg.text = "Congratulations you finished this posture completely, Lets move on to next posture!";
+        window.speechSynthesis.speak(msg);
+        stopWebCamCapture();
+      }
+    }
+  }
+
+  else if (start === true && (leftShoulderColor === "red" || rightShoulderColor === "red" || leftElbowColor === "red" || rightElbowColor === "red" || leftHipColor === "red" || rightHipColor === "red" || leftKneeColor === "red" || rightKneeColor === "red")) {
+    start = false;
+    console.log("Restart");
+  }
+
+
   canvasCtx.restore();
 
   grid.updateLandmarks(results.poseWorldLandmarks);
@@ -213,41 +234,41 @@ camera.start();
 poseImage.setAttribute("src", "images/tree-yoga-pose-vrksasana.jpg");
 
 // When the user clicks on the button, open the modal
-viewPose.onclick = function() {
+viewPose.onclick = function () {
   modal.style.display = "block";
 }
 
 // When the user clicks on <span> (x), close the modal
-span.onclick = function() {
+span.onclick = function () {
   modal.style.display = "none";
 }
 
 // When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
+window.onclick = function (event) {
   if (event.target == modal) {
     modal.style.display = "none";
   }
 }
 
-function stopWebCamCapture(){
+function stopWebCamCapture() {
   const video = document.querySelector('video');
-  
+
   // A video's MediaStream object is available through its srcObject attribute
   const mediaStream = video.srcObject;
-  
+
   // Through the MediaStream, you can get the MediaStreamTracks with getTracks():
   const tracks = mediaStream.getTracks();
 
   // Tracks are returned as an array, so if you know you only have one, you can stop it with: 
   tracks[0].stop();
-  
+
   // Or stop all like so:
-  tracks.forEach(track => track.stop())  
+  tracks.forEach(track => track.stop())
 }
 
-window.addEventListener("keydown", function(event) {
-    if (event.key === 'q') {
-      console.log("Stopping Web Cam Capture")
-      stopWebCamCapture();
-    }
+window.addEventListener("keydown", function (event) {
+  if (event.key === 'q') {
+    console.log("Stopping Web Cam Capture")
+    stopWebCamCapture();
+  }
 });
