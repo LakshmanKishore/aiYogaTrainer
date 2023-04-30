@@ -11,52 +11,121 @@
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script>
   <!-- CSS only -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
-  integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
   <link rel="stylesheet" href="app.css">
   <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
 </head>
 
 <body>
-  <div class="container">
-    <div class="loader"></div>
+  <div class="homePage" align="center">
     <h1 align="center">AI Yoga Trainer</h1>
-    <video class="input_video" hidden></video>
-    <div class="canvasContainer">
-      <button class="view-pose">View Pose</button>
-      <canvas class="output_canvas"></canvas>
-    </div>
+    <h3>Select Yoga Asana for Practice</h3>
 
-    <!-- The Modal -->
-    <div id="myModal" class="modal">
+    <div class="container"></div>
 
-      <!-- Modal content -->
-      <div class="modal-content">
-        <span class="close">&times;</span>
-        <img src="" alt="" class="pose-image" />
+    <div class="row">
+      <div class="col-md-3">
+        <a href="/practice.html?pose=chair">
+          <div class="card mb-3" style="width: 18rem;" id="chair">
+            <img src="images/chair.png" class="card-img-top" alt="Chair Image">
+            <div class="card-body">
+              <p class="card-text">
+              <div> Chair with Open Arm Twist </div>
+              <div>
+                <b>Utkatasana</b>
+              </div>
+              </p>
+            </div>
+          </div>
+        </a>
       </div>
-
+      <div class="col-md-3">
+        <a href="/practice.html?pose=goddess">
+          <div class="card mb-3" style="width: 18rem;" id="goddess">
+            <img src="images/goddess.png" class="card-img-top" alt="Goddess Image">
+            <div class="card-body">
+              <p class="card-text">
+              <div> Goddess with Cactus Arms </div>
+              <div>
+                <b>Utkata Konasana</b>
+              </div>
+              </p>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-3">
+        <a href="/practice.html?pose=star">
+          <div class="card mb-3" style="width: 18rem;" id="star">
+            <img src="images/star.png" class="card-img-top" alt="Star Image">
+            <div class="card-body">
+              <p class="card-text">
+              <div> Star </div>
+              <div>
+                <b>Utthita Tadasana</b>
+              </div>
+              </p>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-3">
+        <a href="/practice.html?pose=half-moon">
+          <div class="card mb-3" style="width: 18rem;" id="half-moon">
+            <img src="images/half-moon.png" class="card-img-top" alt="Half Moon Image">
+            <div class="card-body">
+              <p class="card-text">
+              <div> Half Moon </div>
+              <div>
+                <b>Ardha Chandrasana</b>
+              </div>
+              </p>
+            </div>
+          </div>
+        </a>
+      </div>
     </div>
 
-    <div class="landmark-grid-container" hidden></div>
+    <div class="practice">
+      <div class="container" hidden>
+        <div class="loader" hidden></div>
+        <video class="input_video" hidden></video>
+        <div class="canvasContainer">
+          <button class="view-pose">View Pose</button>
+          <canvas class="output_canvas"></canvas>
+        </div>
+
+        <!-- The Modal -->
+        <div id="myModal" class="modal">
+
+          <!-- Modal content -->
+          <div class="modal-content">
+            <span class="close">&times;</span>
+            <img src="" alt="" class="pose-image" />
+          </div>
+        </div>
+
+        <div class="landmark-grid-container" hidden></div>
 
 
-    <div hidden>
-      <div>Left Elbow Angle: <span class="angleLeftElbow"></span></div>
-      <div>Right Elbow Angle: <span class="angleRightElbow"></span></div>
+        <div>
+          <div>Left Elbow Angle: <span class="angleLeftElbow"></span></div>
+          <div>Right Elbow Angle: <span class="angleRightElbow"></span></div>
 
-      <div>Left Shoulder Angle: <span class="angleLeftShoulder"></span></div>
-      <div>Right Shoulder Angle: <span class="angleRightShoulder"></span></div>
+          <div>Left Shoulder Angle: <span class="angleLeftShoulder"></span></div>
+          <div>Right Shoulder Angle: <span class="angleRightShoulder"></span></div>
 
-      <div>Left Hip Angle: <span class="angleLeftHip"></span></div>
-      <div>Right Hip Angle: <span class="angleRightHip"></span></div>
+          <div>Left Hip Angle: <span class="angleLeftHip"></span></div>
+          <div>Right Hip Angle: <span class="angleRightHip"></span></div>
 
-      <div>Left Knee Angle: <span class="angleLeftKnee"></span></div>
-      <div>Right Knee Angle: <span class="angleRightKnee"></span></div>
+          <div>Left Knee Angle: <span class="angleLeftKnee"></span></div>
+          <div>Right Knee Angle: <span class="angleRightKnee"></span></div>
+        </div>
+
+
+      </div>
     </div>
-
-
-  </div>
-  <script src="app.js"></script>
+    <script src="app.js"></script>
 </body>
 
 </html>

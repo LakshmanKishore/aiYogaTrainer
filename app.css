@@ -6,10 +6,30 @@
     z-index: 999;
 }
 
-canvas {
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
+
+.container, .input_video, .output_canvas {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.input_video {
+    transform: scaleX(-1);
+    filter: FlipH;
+}
+
+
+/* canvas {
     height: 90vh;
     width: 90vw;
-}
+} */
 
 .canvasContainer {
     display: flex;
@@ -21,12 +41,13 @@ canvas {
     background-color: #4CAF50;
     border: none;
     color: white;
-    padding: 10px 20px;
+    padding: 5px 15px;
     text-align: center;
     text-decoration: none;
     font-size: 16px;
     border-radius: 5px;
     cursor: pointer;
+    z-index: 10;
 }
 
 /* The Modal (background) */
@@ -68,12 +89,19 @@ canvas {
     margin-top: 5%;
 }
 
+.modal-content>img {
+    max-width: 100%;
+    max-height: 80vh;
+}
+
 /* The Close Button */
 .close {
     color: #aaa;
     float: right;
     font-size: 28px;
     font-weight: bold;
+    text-align: right;
+    padding-right: 1rem;
 }
 
 .close:hover,
@@ -83,6 +111,11 @@ canvas {
     cursor: pointer;
 }
 
-.view-pose:hover{
+.view-pose:hover {
     background-color: #3e8e41;
+}
+
+a {
+    color: black;
+    text-decoration: inherit;
 }
