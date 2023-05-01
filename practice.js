@@ -48,8 +48,8 @@ let colorsArray = [],
   textXPosition,
   textYPosition;
 
-canvasElement.width = window.innerWidth;
-canvasElement.height = window.innerHeight;
+// canvasElement.width = window.innerWidth;
+// canvasElement.height = window.innerHeight;
 
 window.addEventListener('resize', () => {
   canvasElement.width = videoElement.videoWidth;
@@ -70,22 +70,32 @@ const correctAngles = {
     "rightKnee": "108.25"
   },
   "goddess": {
-    "leftElbow": "88.27",
-    "rightElbow": "89.23",
-    "leftShoulder": "92.14",
-    "rightShoulder": "93.70",
-    "leftHip": "112.72",
-    "rightHip": "111.51",
-    "leftKnee": "119.44",
-    "rightKnee": "118.21"
+    "leftElbow": "91.45",
+    "rightElbow": "93.94",
+    "leftShoulder": "91.37",
+    "rightShoulder": "99.83",
+    "leftHip": "102.89",
+    "rightHip": "96.17",
+    "leftKnee": "110.91",
+    "rightKnee": "104.50"
   },
+  // "goddess": {
+  //   "leftElbow": "88.27",
+  //   "rightElbow": "89.23",
+  //   "leftShoulder": "92.14",
+  //   "rightShoulder": "93.70",
+  //   "leftHip": "112.72",
+  //   "rightHip": "111.51",
+  //   "leftKnee": "119.44",
+  //   "rightKnee": "118.21"
+  // },
   "star": {
     "leftElbow": "169.49",
     "rightElbow": "174.28",
     "leftShoulder": "91.88",
     "rightShoulder": "92.75",
-    "leftHip": "144.68",
-    "rightHip": "147.10",
+    "leftHip": "160.68",
+    "rightHip": "160.10",
     "leftKnee": "178.16",
     "rightKnee": "178.45"
   },
@@ -139,6 +149,10 @@ function onResults(results) {
   if (!CameraCaptureStarted) {
     loader.style.display = "none";
     CameraCaptureStarted = true;
+
+    // Set the canvasElement width and height
+    canvasElement.width = videoElement.videoWidth;
+    canvasElement.height = videoElement.videoHeight;
   }
   if (!results.poseLandmarks) {
     grid.updateLandmarks([]);
@@ -193,10 +207,11 @@ function onResults(results) {
   // console.log(colorsSet)
   // console.log(leftElbowColor);
 
-
+  
   canvasCtx.save();
+  
   canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
-  canvasCtx.drawImage(results.segmentationMask, 0, 0, canvasElement.width, canvasElement.height);
+  // canvasCtx.drawImage(results.segmentationMask, 0, 0, canvasElement.width, canvasElement.height);
 
   // Only overwrite existing pixels.
   canvasCtx.globalCompositeOperation = 'source-in';
@@ -205,6 +220,7 @@ function onResults(results) {
 
   // Only overwrite missing pixels.
   canvasCtx.globalCompositeOperation = 'destination-atop';
+  // console.log(results.image, typeof(results.image));
   canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
 
   canvasCtx.globalCompositeOperation = 'source-over';
@@ -229,7 +245,10 @@ function onResults(results) {
   drawLandmarks(canvasCtx, [lm[25]], { fillColor: '#00000002', lineWidth: 5, radius: 20, color: leftKneeColor });
   drawLandmarks(canvasCtx, [lm[26]], { fillColor: '#00000002', lineWidth: 5, radius: 20, color: rightKneeColor });
 
-  drawNumberBox(canvasCtx, 0, canvasElement.width - 150, canvasElement.height - 150, 150, 150, "sans-serif");
+  // drawNumberBox(canvasCtx, 0, canvasElement.width - 150, canvasElement.height - 150, 150, 150, "sans-serif");
+  canvasCtx.scale(-1,1)
+  // Since the canvas is transformed to scale(-1,1) Hence x is -150
+  drawNumberBox(canvasCtx, 0, -150, canvasElement.height - 150, 150, 150, "sans-serif");
 
 
   if (leftShoulderColor === "green" && rightShoulderColor === "green" && leftElbowColor === "green" && rightElbowColor === "green" && leftHipColor === "green" && rightHipColor === "green" && leftKneeColor === "green" && rightKneeColor === "green") {
@@ -241,7 +260,7 @@ function onResults(results) {
       currentTimeStamp = new Date() - startTimeStamp;
       secondsHold = Math.round(currentTimeStamp / 1000);
       canvasCtx.globalCompositeOperation = 'source-over';
-      drawNumberBox(canvasCtx, secondsHold, canvasElement.width - 150, canvasElement.height - 150, 150, 150, "sans-serif");
+      drawNumberBox(canvasCtx, secondsHold, -150, canvasElement.height - 150, 150, 150, "sans-serif");
 
       if (currentTimeStamp >= 5000) {
         console.log("Move to next Asana");
@@ -259,9 +278,8 @@ function onResults(results) {
     console.log("Restart");
   }
 
-
   canvasCtx.restore();
-
+  
   grid.updateLandmarks(results.poseWorldLandmarks);
 }
 
@@ -286,7 +304,6 @@ poseImage.setAttribute("src", `images/${selectedPose}.png`);
 const camera = new Camera(videoElement, {
   // facingMode: "environment",
   onFrame: async () => {
-    // console.log(videoElement, typeof(videoElement));
     await pose.send({ image: videoElement });
   }
 });

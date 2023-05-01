@@ -15,12 +15,9 @@ html, body {
 
 .container, .input_video, .output_canvas {
     position: fixed;
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
 }
 
-.input_video {
+.input_video, .output_canvas{
     transform: scaleX(-1);
     filter: FlipH;
 }
@@ -33,7 +30,8 @@ html, body {
 
 .canvasContainer {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
+    position: relative;
 }
 
 .view-pose {
@@ -48,6 +46,13 @@ html, body {
     border-radius: 5px;
     cursor: pointer;
     z-index: 10;
+    top: 0;
+    right: 0;
+}
+
+.output_canvas {
+    max-width: 100%;
+    max-height: 100%;
 }
 
 /* The Modal (background) */
@@ -86,12 +91,13 @@ html, body {
     margin: auto;
     display: flex;
     justify-content: center;
-    margin-top: 5%;
+    margin-top: 2.5rem;
 }
 
 .modal-content>img {
     max-width: 100%;
     max-height: 80vh;
+    border-radius: 25px;
 }
 
 /* The Close Button */
