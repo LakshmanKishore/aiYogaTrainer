@@ -90,14 +90,14 @@ const correctAngles = {
   //   "rightKnee": "118.21"
   // },
   "star": {
-    "leftElbow": "169.49",
-    "rightElbow": "174.28",
+    "leftElbow": "160.49",
+    "rightElbow": "160.28",
     "leftShoulder": "91.88",
-    "rightShoulder": "92.75",
+    "rightShoulder": "82.75",
     "leftHip": "160.68",
     "rightHip": "160.10",
-    "leftKnee": "178.16",
-    "rightKnee": "178.45"
+    "leftKnee": "180.16",
+    "rightKnee": "180.45"
   },
   "half-moon": {
     "leftElbow": "163.81",
@@ -111,7 +111,7 @@ const correctAngles = {
   }
 }
 
-const angleBuffer = 20;
+const angleBuffer = 30;
 
 
 
